@@ -18,7 +18,26 @@ public class ScoreManager : MonoBehaviour
 		eFishingchu,
 	}
 
-	public enum Cate
+	public enum Categories
+	{
+		eNone,
+		eAce,
+		eDeuces,
+		eThrees,
+		eFours,
+		eFives,
+		eSixes,
+		eSubTotal,
+		eBonus,
+		eChoice,
+		e4ofaKind,
+		eFullHouse,
+		eSmallStraight,
+		eLargeStraight,
+		eFishingchu,
+		eTotal,
+	}
+
 	public Text[] m_textPlayer1;
 	public Text[] m_textPlayer2;
 
@@ -161,8 +180,44 @@ public class ScoreManager : MonoBehaviour
 
 	void UpdateScore()
 	{
-		// Text 에 글자 업데이트
+		{ // Player1
+			m_textPlayer1[(int)Categories.eAce].text			= "";
+			m_textPlayer1[(int)Categories.eDeuces].text			= "";
+			m_textPlayer1[(int)Categories.eThrees].text			= "";
+			m_textPlayer1[(int)Categories.eFours].text			= "";
+			m_textPlayer1[(int)Categories.eFives].text			= "";
+			m_textPlayer1[(int)Categories.eSixes].text			= "";
+			m_textPlayer1[(int)Categories.eSubTotal].text		= "";
+			m_textPlayer1[(int)Categories.eBonus].text			= "";
 
+			m_textPlayer1[(int)Categories.eChoice].text			= "";
+			m_textPlayer1[(int)Categories.e4ofaKind].text		= "";
+			m_textPlayer1[(int)Categories.eFullHouse].text		= "";
+			m_textPlayer1[(int)Categories.eSmallStraight].text	= "";
+			m_textPlayer1[(int)Categories.eLargeStraight].text	= "";
 
+			m_textPlayer1[(int)Categories.eFishingchu].text		= "";
+			m_textPlayer1[(int)Categories.eTotal].text			= "";
+		}
+
+		{ // Player2
+			m_textPlayer2[(int)Categories.eAce].text			= "";
+			m_textPlayer2[(int)Categories.eDeuces].text			= "";
+			m_textPlayer2[(int)Categories.eThrees].text			= "";
+			m_textPlayer2[(int)Categories.eFours].text			= "";
+			m_textPlayer2[(int)Categories.eFives].text			= "";
+			m_textPlayer2[(int)Categories.eSixes].text			= "";
+			m_textPlayer2[(int)Categories.eSubTotal].text		= "";
+			m_textPlayer2[(int)Categories.eBonus].text			= "";
+
+			m_textPlayer2[(int)Categories.eChoice].text			= "";
+			m_textPlayer2[(int)Categories.e4ofaKind].text		= "";
+			m_textPlayer2[(int)Categories.eFullHouse].text		= "";
+			m_textPlayer2[(int)Categories.eSmallStraight].text	= "";
+			m_textPlayer2[(int)Categories.eLargeStraight].text	= "";
+
+			m_textPlayer2[(int)Categories.eFishingchu].text		= "";
+			m_textPlayer2[(int)Categories.eTotal].text			= "";
+		}
 	}
 }
