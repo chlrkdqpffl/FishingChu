@@ -4703,11 +4703,11 @@ MonoBehaviour:
   m_tmDiceParent: {fileID: 755732134}
   m_textTurn: {fileID: 2094572933}
   m_btnDice:
-  - {fileID: 683556454}
-  - {fileID: 1547296269}
-  - {fileID: 653764655}
-  - {fileID: 1485211251}
-  - {fileID: 118826564}
+  - {fileID: 1490025644}
+  - {fileID: 1351550485}
+  - {fileID: 1382014920}
+  - {fileID: 683971827}
+  - {fileID: 979900162}
   m_playerData:
   - {fileID: 257090938}
   - {fileID: 2065887394}
