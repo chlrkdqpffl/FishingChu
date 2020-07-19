@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
 	[Header("UI Variable")]
 	public Transform m_tmDiceParent;
 	public Text m_textTurn;
-	public Text[] m_textDice;
+	public Button[] m_btnDice;
 
 	private int m_nNowTurn;
 	private int[] m_arrDice;
@@ -63,15 +63,18 @@ public class GameManager : MonoBehaviour
 	{
 		// Random Dice
 		for (int i = 0; i < m_arrDice.Length; ++i)
-			m_arrDice[i] =  UnityEngine.Random.Range(1, 7);
-	
+		{
+			if (i < m_arrDice.Length - GetDisplayKeepCount())
+				m_arrDice[i] = UnityEngine.Random.Range(1, 7);
+			else
+				m_arrDice[i] = 0;
+		}
+
 		// Sort
 		Array.Sort(m_arrDice);
 
 		// UI
-		m_tmDiceParent.gameObject.SetActive(true);
-		for (int i = 0; i < m_arrDice.Length; ++i)
-			m_textDice[i].text = m_arrDice[i].ToString();
+		ShowDicePositionOnSort();
 
 		m_playerData[(int)m_nNowPlayer].CalcDiceValue(m_arrDice);
 	}
@@ -82,7 +85,68 @@ public class GameManager : MonoBehaviour
 			return;
 
 		m_playerData[(int)m_nNowPlayer].KeepDice(m_arrDice[index]);
+		m_btnDice[index].gameObject.SetActive(false);
 	}
 
+	int GetDisplayKeepCount()
+	{
+		int nKeepCount = 0;
+		foreach (var player in m_playerData)
+		{
+			if (nKeepCount < player.KeepCount)
+				nKeepCount = player.KeepCount;
+		}
 
+		return nKeepCount;
+	}
+
+	void ShowDicePositionOnSort()
+	{
+		m_tmDiceParent.gameObject.SetActive(true);
+		for (int i = 0; i < m_arrDice.Length; ++i)
+		{
+			if (i < m_arrDice.Length - GetDisplayKeepCount())
+			{
+				m_btnDice[i].gameObject.SetActive(true);
+				m_btnDice[i].GetComponentInChildren<Text>().text = m_arrDice[i].ToString();
+			}
+			else
+			{
+				m_btnDice[i].gameObject.SetActive(false);
+			}
+		}
+
+		// Sort Position
+
+		List<GameObject> activeList = new List<GameObject>();
+
+		foreach (var dice in m_btnDice)
+		{
+			if(dice.gameObject.activeSelf == true)
+				activeList.Add(dice.gameObject);
+		}
+
+		switch (GetDisplayKeepCount())
+		{
+			case 0:
+
+				break;
+
+			case 1:
+
+				break;
+
+			case 2:
+
+				break;
+
+			case 3:
+
+				break;
+
+			case 4:
+
+				break;
+		}
+	}
 }

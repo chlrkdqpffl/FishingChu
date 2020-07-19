@@ -4702,12 +4702,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_tmDiceParent: {fileID: 755732134}
   m_textTurn: {fileID: 2094572933}
-  m_textDice:
-  - {fileID: 512358482}
-  - {fileID: 666271732}
-  - {fileID: 2125661715}
-  - {fileID: 1703506307}
-  - {fileID: 506076412}
+  m_btnDice:
+  - {fileID: 683556454}
+  - {fileID: 1547296269}
+  - {fileID: 653764655}
+  - {fileID: 1485211251}
+  - {fileID: 118826564}
   m_playerData:
   - {fileID: 257090938}
   - {fileID: 2065887394}

@@ -32,6 +32,10 @@ public class PlayerData : MonoBehaviour
 	}
 	
 	private int m_nKeepDiceCount = 0;
+	public int KeepCount
+	{
+		get { return m_nKeepDiceCount; }
+	}
 	private bool m_bBonusScore = false;
 
 	private void Awake()
@@ -91,7 +95,8 @@ public class PlayerData : MonoBehaviour
 
 		foreach (var value in arrDice)
 		{
-			dicTemp[value]++;
+			if(value != 0)
+				dicTemp[value]++;
 		}
 
 		// Top Score : Dice Count
@@ -127,6 +132,7 @@ public class PlayerData : MonoBehaviour
 		if (GameManager.DiceCount <= m_nKeepDiceCount)
 		{
 			m_nowAction = ActionType.eScoreSelect;
+			ScoreSelectMode();
 		}
 	}
 
