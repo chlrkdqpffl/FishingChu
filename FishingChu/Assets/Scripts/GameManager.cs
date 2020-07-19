@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,37 +26,61 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	public const int ReferenceBonusScore = 63;
+	public const int GameOverTurn = 12;
+	public const int DiceCount = 5;
+
 	[Header("UI Variable")]
+	public Transform m_tmDiceParent;
 	public Text m_textTurn;
 	public Text[] m_textDice;
-
 
 	private int m_nNowTurn;
 	private int[] m_arrDice;
 	private PlayerType m_nNowPlayer = PlayerType.eLeft;
 
-	public const int ReferenceBonusScore = 63;
-	public const int GameOverTurn = 12;
 	public PlayerData[] m_playerData;
 
 	void Awake()
 	{
-		m_arrDice = new int[5];
+		m_arrDice = new int[DiceCount];
 	}
 
-	public void OnRollDice(int[] arrDice)
+	void Start()
 	{
-		for (int i = 0; i < m_arrDice.Length; ++i)
-		{
-			m_arrDice[i] = Random.Range(1, 7);
-			m_textDice[i].text = m_arrDice[i].ToString();
-		}
+		InitGame();
+	}
 
-		m_playerData[(int)m_nNowPlayer].CalcDiceValue(arrDice);
+	void InitGame()
+	{
+		foreach (var player in m_playerData)
+			player.InitScore();
+
+		m_tmDiceParent.gameObject.SetActive(false);
+	}
+
+	public void OnRollDice()
+	{
+		// Random Dice
+		for (int i = 0; i < m_arrDice.Length; ++i)
+			m_arrDice[i] =  UnityEngine.Random.Range(1, 7);
+	
+		// Sort
+		Array.Sort(m_arrDice);
+
+		// UI
+		m_tmDiceParent.gameObject.SetActive(true);
+		for (int i = 0; i < m_arrDice.Length; ++i)
+			m_textDice[i].text = m_arrDice[i].ToString();
+
+		m_playerData[(int)m_nNowPlayer].CalcDiceValue(m_arrDice);
 	}
 
 	public void OnKeepDice(int index)
 	{
+		if (m_playerData[(int)m_nNowPlayer].PlayerAction != PlayerData.ActionType.eKeepSelect)
+			return;
+
 		m_playerData[(int)m_nNowPlayer].KeepDice(m_arrDice[index]);
 	}
 
