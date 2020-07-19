@@ -10,12 +10,12 @@ public class ScoreManager : MonoBehaviour
 	public enum RankOfHands
 	{
 		eNone,
-		eChoice,
+		eChoice = 9,
 		e4ofaKind,
 		eFullHouse,
 		eSmallStraight,
 		eLargeStraight,
-		eFishingchu,
+		eFishingChu,
 	}
 
 	public enum Categories
@@ -28,18 +28,18 @@ public class ScoreManager : MonoBehaviour
 		eFives,
 		eSixes,
 		eSubTotal,
-		eBonus,
+		eBonus,		// 8
+
 		eChoice,
 		e4ofaKind,
 		eFullHouse,
 		eSmallStraight,
 		eLargeStraight,
-		eFishingchu,
+		eFishingChu,
 		eTotal,
-	}
 
-	public Text[] m_textPlayer1;
-	public Text[] m_textPlayer2;
+		eMax,
+	}
 
 	private static ScoreManager _instance;
 	public static ScoreManager Instance
@@ -47,24 +47,49 @@ public class ScoreManager : MonoBehaviour
 		get	{
 			if (_instance == null)
 			{
-				_instance = new ScoreManager();
+				_instance = GameObject.FindObjectOfType(typeof(ScoreManager)) as ScoreManager;
 			}
 			return _instance;
 		}
 	}
-
-//	private Dictionary<int, int> m_dic
 	
-	// 각 족보별 계산식 적용
-	//delegate 
-
-
-
-
-	public void CalcDiceValue(int[] arrDice)
+	public int CalcRankOfHandsFunc(RankOfHands type, int[] arrDice)
 	{
+		int score = 0;
+		switch(type)
+		{
+			case RankOfHands.eChoice:
+				score = CalcTotalSum(arrDice);
+				break;
 
+			case RankOfHands.e4ofaKind:
+				if(true == Check4ofaKind(arrDice))
+					score = CalcTotalSum(arrDice);
+				break;
 
+			case RankOfHands.eFullHouse:
+				if (true == CheckFullHouse(arrDice))
+					score = CalcTotalSum(arrDice);
+				break;
+
+			case RankOfHands.eSmallStraight:
+				score = CheckSmallStaright(arrDice);
+				break;
+
+			case RankOfHands.eLargeStraight:
+				score = CheckLargeStaright(arrDice);
+				break;
+
+			case RankOfHands.eFishingChu:
+				score = CheckFishingChu(arrDice);
+				break;
+
+			default:
+				Debug.LogError("<color=red> Not existent type : " + type + "\n ScoreManager:CalcRankOfHandsFunc  </color>");
+				break;
+		}
+
+		return score;
 	}
 
 	int CalcTotalSum(int[] arrDice)
@@ -80,12 +105,12 @@ public class ScoreManager : MonoBehaviour
 	{
 		var dicTemp = new Dictionary<int, int>();
 
-		foreach (var value in arrDice)
+		for(int i = 0; i < arrDice.Length; ++i)
 		{
-			if (dicTemp.ContainsKey(arrDice[0]))
-				dicTemp[0]++;
+			if (dicTemp.ContainsKey(arrDice[i]))
+				dicTemp[arrDice[i]]++;
 			else
-				dicTemp.Add(arrDice[0], 1);
+				dicTemp.Add(arrDice[i], 1);
 		}
 
 		if (2 < dicTemp.Count)
@@ -104,12 +129,12 @@ public class ScoreManager : MonoBehaviour
 	{
 		var dicTemp = new Dictionary<int, int>();
 
-		foreach (var value in arrDice)
+		for (int i = 0; i < arrDice.Length; ++i)
 		{
-			if (dicTemp.ContainsKey(arrDice[0]))
-				dicTemp[0]++;
+			if (dicTemp.ContainsKey(arrDice[i]))
+				dicTemp[arrDice[i]]++;
 			else
-				dicTemp.Add(arrDice[0], 1);
+				dicTemp.Add(arrDice[i], 1);
 		}
 
 		if (2 < dicTemp.Count)
@@ -136,12 +161,13 @@ public class ScoreManager : MonoBehaviour
 		Array.Sort(arrDice);
 
 		int consecutiveNumber = 0;
-		for (int i = 0; i < arrDice.Length - 1; ++i) {
-			if (arrDice[i] == arrDice[i + 1] + 1)
+		for (int i = 0; i < arrDice.Length - 1; ++i)
+		{
+			if (arrDice[i].Equals(arrDice[i + 1] - 1))
 				consecutiveNumber++;
 		}
 
-		if (4 <= consecutiveNumber)
+		if (3 <= consecutiveNumber)
 			return 15;
 		else
 			return 0;
@@ -154,11 +180,11 @@ public class ScoreManager : MonoBehaviour
 		int consecutiveNumber = 0;
 		for (int i = 0; i < arrDice.Length - 1; ++i)
 		{
-			if (arrDice[i] == arrDice[i + 1] + 1)
+			if (arrDice[i].Equals(arrDice[i + 1] - 1))
 				consecutiveNumber++;
 		}
 
-		if (5 <= consecutiveNumber)
+		if (4 <= consecutiveNumber)
 			return 30;
 		else
 			return 0;
@@ -176,48 +202,5 @@ public class ScoreManager : MonoBehaviour
 		}
 
 		return 50;
-	}
-
-	void UpdateScore()
-	{
-		{ // Player1
-			m_textPlayer1[(int)Categories.eAce].text			= "";
-			m_textPlayer1[(int)Categories.eDeuces].text			= "";
-			m_textPlayer1[(int)Categories.eThrees].text			= "";
-			m_textPlayer1[(int)Categories.eFours].text			= "";
-			m_textPlayer1[(int)Categories.eFives].text			= "";
-			m_textPlayer1[(int)Categories.eSixes].text			= "";
-			m_textPlayer1[(int)Categories.eSubTotal].text		= "";
-			m_textPlayer1[(int)Categories.eBonus].text			= "";
-
-			m_textPlayer1[(int)Categories.eChoice].text			= "";
-			m_textPlayer1[(int)Categories.e4ofaKind].text		= "";
-			m_textPlayer1[(int)Categories.eFullHouse].text		= "";
-			m_textPlayer1[(int)Categories.eSmallStraight].text	= "";
-			m_textPlayer1[(int)Categories.eLargeStraight].text	= "";
-
-			m_textPlayer1[(int)Categories.eFishingchu].text		= "";
-			m_textPlayer1[(int)Categories.eTotal].text			= "";
-		}
-
-		{ // Player2
-			m_textPlayer2[(int)Categories.eAce].text			= "";
-			m_textPlayer2[(int)Categories.eDeuces].text			= "";
-			m_textPlayer2[(int)Categories.eThrees].text			= "";
-			m_textPlayer2[(int)Categories.eFours].text			= "";
-			m_textPlayer2[(int)Categories.eFives].text			= "";
-			m_textPlayer2[(int)Categories.eSixes].text			= "";
-			m_textPlayer2[(int)Categories.eSubTotal].text		= "";
-			m_textPlayer2[(int)Categories.eBonus].text			= "";
-
-			m_textPlayer2[(int)Categories.eChoice].text			= "";
-			m_textPlayer2[(int)Categories.e4ofaKind].text		= "";
-			m_textPlayer2[(int)Categories.eFullHouse].text		= "";
-			m_textPlayer2[(int)Categories.eSmallStraight].text	= "";
-			m_textPlayer2[(int)Categories.eLargeStraight].text	= "";
-
-			m_textPlayer2[(int)Categories.eFishingchu].text		= "";
-			m_textPlayer2[(int)Categories.eTotal].text			= "";
-		}
 	}
 }
