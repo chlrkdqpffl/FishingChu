@@ -53,35 +53,41 @@ public class ScoreManager : MonoBehaviour
 		}
 	}
 	
-	public int CalcRankOfHandsFunc(RankOfHands type, int[] arrDice)
+	public int CalcRankOfHandsFunc(RankOfHands type, Dictionary<int, int> dicDice)
 	{
+		Debug.Log("CalcRankOfHandsFunc\n");
+		foreach(var dic in dicDice)
+		{
+			Debug.Log(dic.Key + " : " + dic.Value);
+		}
+		Debug.Log("======================");
 		int score = 0;
 		switch(type)
 		{
 			case RankOfHands.eChoice:
-				score = CalcTotalSum(arrDice);
+				score = CalcTotalSum(dicDice);
 				break;
 
 			case RankOfHands.e4ofaKind:
-				if(true == Check4ofaKind(arrDice))
-					score = CalcTotalSum(arrDice);
+				if(true == Check4ofaKind(dicDice))
+					score = CalcTotalSum(dicDice);
 				break;
 
 			case RankOfHands.eFullHouse:
-				if (true == CheckFullHouse(arrDice))
-					score = CalcTotalSum(arrDice);
+				if (true == CheckFullHouse(dicDice))
+					score = CalcTotalSum(dicDice);
 				break;
 
 			case RankOfHands.eSmallStraight:
-				score = CheckSmallStaright(arrDice);
+				score = CheckSmallStaright(dicDice);
 				break;
 
 			case RankOfHands.eLargeStraight:
-				score = CheckLargeStaright(arrDice);
+				score = CheckLargeStaright(dicDice);
 				break;
 
 			case RankOfHands.eFishingChu:
-				score = CheckFishingChu(arrDice);
+				score = CheckFishingChu(dicDice);
 				break;
 
 			default:
@@ -92,31 +98,23 @@ public class ScoreManager : MonoBehaviour
 		return score;
 	}
 
-	int CalcTotalSum(int[] arrDice)
+	int CalcTotalSum(Dictionary<int, int> dicDice)
 	{
 		int result = 0;
-		foreach (var value in arrDice)
-			result += value;
+		foreach (var value in dicDice)
+		{
+			result += value.Key * value.Value;
+		}
 
 		return result;
 	}
 
-	bool Check4ofaKind(int[] arrDice)
+	bool Check4ofaKind(Dictionary<int, int> dicDice)
 	{
-		var dicTemp = new Dictionary<int, int>();
-
-		for(int i = 0; i < arrDice.Length; ++i)
-		{
-			if (dicTemp.ContainsKey(arrDice[i]))
-				dicTemp[arrDice[i]]++;
-			else
-				dicTemp.Add(arrDice[i], 1);
-		}
-
-		if (2 < dicTemp.Count)
+		if (2 < dicDice.Count)
 			return false;
 
-		foreach(var value in dicTemp)
+		foreach(var value in dicDice)
 		{
 			if (4 <= value.Value)
 				return true;
@@ -125,28 +123,18 @@ public class ScoreManager : MonoBehaviour
 		return false;
 	}
 
-	bool CheckFullHouse(int[] arrDice)
+	bool CheckFullHouse(Dictionary<int, int> dicDice)
 	{
-		var dicTemp = new Dictionary<int, int>();
-
-		for (int i = 0; i < arrDice.Length; ++i)
-		{
-			if (dicTemp.ContainsKey(arrDice[i]))
-				dicTemp[arrDice[i]]++;
-			else
-				dicTemp.Add(arrDice[i], 1);
-		}
-
-		if (2 < dicTemp.Count)
+		if (2 < dicDice.Count)
 			return false;
 
-		if (dicTemp.Count == 1)
+		if (dicDice.Count == 1)
 		{
 			return true;
 		}
 		else
 		{
-			foreach (var value in dicTemp)
+			foreach (var value in dicDice)
 			{
 				if (value.Value == 2 || value.Value == 3)
 					return true;
@@ -156,51 +144,27 @@ public class ScoreManager : MonoBehaviour
 		return false;
 	}
 
-	int CheckSmallStaright(int[] arrDice)
+	int CheckSmallStaright(Dictionary<int, int> dicDice)
 	{
-		Array.Sort(arrDice);
-
-		int consecutiveNumber = 0;
-		for (int i = 0; i < arrDice.Length - 1; ++i)
-		{
-			if (arrDice[i].Equals(arrDice[i + 1] - 1))
-				consecutiveNumber++;
-		}
-
-		if (3 <= consecutiveNumber)
+		if (4 <= dicDice.Count)
 			return 15;
 		else
 			return 0;
 	}
 
-	int CheckLargeStaright(int[] arrDice)
+	int CheckLargeStaright(Dictionary<int, int> dicDice)
 	{
-		Array.Sort(arrDice);
-
-		int consecutiveNumber = 0;
-		for (int i = 0; i < arrDice.Length - 1; ++i)
-		{
-			if (arrDice[i].Equals(arrDice[i + 1] - 1))
-				consecutiveNumber++;
-		}
-
-		if (4 <= consecutiveNumber)
+		if (5 <= dicDice.Count)
 			return 30;
 		else
 			return 0;
 	}
 
-	int CheckFishingChu(int[] arrDice)
+	int CheckFishingChu(Dictionary<int, int> dicDice)
 	{
-		int selectValue = arrDice[0];
-		foreach(var value in arrDice)
-		{
-			if (selectValue == value)
-				continue;
-			else
-				return 0;
-		}
-
-		return 50;
+		if (1 == dicDice.Count)
+			return 50;
+		else
+			return 0;
 	}
 }

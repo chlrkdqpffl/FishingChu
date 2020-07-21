@@ -90,25 +90,51 @@ public class PlayerData : MonoBehaviour
 		m_nowAction = ActionType.eKeepSelect;
 
 		var dicTemp = new Dictionary<int, int>();
-		for (int i = 1; i <= 6; ++i)
-			dicTemp.Add(i, 0);
-
 		foreach (var value in arrDice)
 		{
 			if(value != 0)
-				dicTemp[value]++;
+			{
+				if(true == dicTemp.ContainsKey(value))
+				{
+					dicTemp[value]++;
+				}
+				else
+				{
+					dicTemp.Add(value, 1);
+				}
+			}
+		}
+
+		// Add Keep Dice
+		foreach (var value in m_dicKeepDice)
+		{
+			if (value.Value != 0)
+			{
+				if (true == dicTemp.ContainsKey(value.Key))
+				{
+					dicTemp[value.Key] += value.Value;
+				}
+				else
+				{
+					dicTemp.Add(value.Key, value.Value);
+				}
+
+			}	
 		}
 
 		// Top Score : Dice Count
 		for (int selectValue = (int)ScoreManager.Categories.eAce; selectValue <= (int)ScoreManager.Categories.eSixes; ++selectValue)
 		{
-			m_nTempScore[selectValue - 1] = selectValue * (m_dicKeepDice[selectValue] + dicTemp[selectValue]);
+			if (dicTemp.ContainsKey(selectValue))
+				m_nTempScore[selectValue - 1] = selectValue * dicTemp[selectValue];
+			else
+				m_nTempScore[selectValue - 1] = 0;
 		}
 
 		// Bottom Score : Rank Of Hands
 		for (int selectValue = (int)ScoreManager.Categories.eChoice; selectValue <= (int)ScoreManager.Categories.eFishingChu; ++selectValue)
 		{
-			m_nTempScore[selectValue - 1] = ScoreManager.Instance.CalcRankOfHandsFunc((ScoreManager.RankOfHands)selectValue, arrDice);
+			m_nTempScore[selectValue - 1] = ScoreManager.Instance.CalcRankOfHandsFunc((ScoreManager.RankOfHands)selectValue, dicTemp);
 		}
 
 

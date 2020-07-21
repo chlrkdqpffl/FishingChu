@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
 		Array.Sort(m_arrDice);
 
 		// UI
-		ShowDicePositionOnSort();
+		ShowDiceOnActive();
 
 		m_playerData[(int)m_nNowPlayer].CalcDiceValue(m_arrDice);
 	}
@@ -86,6 +86,7 @@ public class GameManager : MonoBehaviour
 
 		m_playerData[(int)m_nNowPlayer].KeepDice(m_arrDice[index]);
 		m_btnDice[index].gameObject.SetActive(false);
+		SortDicePosition();
 	}
 
 	int GetDisplayKeepCount()
@@ -100,53 +101,68 @@ public class GameManager : MonoBehaviour
 		return nKeepCount;
 	}
 
-	void ShowDicePositionOnSort()
+	void SortDicePosition()
 	{
-		m_tmDiceParent.gameObject.SetActive(true);
-		for (int i = 0; i < m_arrDice.Length; ++i)
-		{
-			if (i < m_arrDice.Length - GetDisplayKeepCount())
-			{
-				m_btnDice[i].gameObject.SetActive(true);
-				m_btnDice[i].GetComponentInChildren<Text>().text = m_arrDice[i].ToString();
-			}
-			else
-			{
-				m_btnDice[i].gameObject.SetActive(false);
-			}
-		}
-
-		// Sort Position
-
+		// 현재는 2D UI 로 포지션을 강제 세팅하지만, 주사위 (3D) 로 변경 시 다시 세팅 필요
 		List<GameObject> activeList = new List<GameObject>();
 
 		foreach (var dice in m_btnDice)
 		{
-			if(dice.gameObject.activeSelf == true)
+			if (dice.gameObject.activeSelf == true)
 				activeList.Add(dice.gameObject);
 		}
 
 		switch (GetDisplayKeepCount())
 		{
 			case 0:
-
+				activeList[0].GetComponent<RectTransform>().localPosition = new Vector3(-60, 60, 0);
+				activeList[1].GetComponent<RectTransform>().localPosition = new Vector3(160, 60, 0);
+				activeList[2].GetComponent<RectTransform>().localPosition = new Vector3(380, 60, 0);
+				activeList[3].GetComponent<RectTransform>().localPosition = new Vector3(600, 60, 0);
+				activeList[4].GetComponent<RectTransform>().localPosition = new Vector3(820, 60, 0);
 				break;
 
 			case 1:
+				activeList[0].GetComponent<RectTransform>().localPosition = new Vector3(50, 60, 0);
+				activeList[1].GetComponent<RectTransform>().localPosition = new Vector3(270, 60, 0);
+				activeList[2].GetComponent<RectTransform>().localPosition = new Vector3(490, 60, 0);
+				activeList[3].GetComponent<RectTransform>().localPosition = new Vector3(710, 60, 0);
 
 				break;
 
 			case 2:
-
+				activeList[0].GetComponent<RectTransform>().localPosition = new Vector3(160, 60, 0);
+				activeList[1].GetComponent<RectTransform>().localPosition = new Vector3(380, 60, 0);
+				activeList[2].GetComponent<RectTransform>().localPosition = new Vector3(600, 60, 0);
 				break;
 
 			case 3:
-
+				activeList[0].GetComponent<RectTransform>().localPosition = new Vector3(270, 60, 0);
+				activeList[1].GetComponent<RectTransform>().localPosition = new Vector3(490, 60, 0);
 				break;
 
 			case 4:
-
+				activeList[0].GetComponent<RectTransform>().localPosition = new Vector3(380, 60, 0);
 				break;
 		}
+	}
+
+	void ShowDiceOnActive()
+	{
+		m_tmDiceParent.gameObject.SetActive(true);
+		for (int i = 0; i < m_arrDice.Length; ++i)
+		{
+			if (m_arrDice[i] <= 0)
+			{
+				m_btnDice[i].gameObject.SetActive(false);
+			}
+			else
+			{
+				m_btnDice[i].gameObject.SetActive(true);
+				m_btnDice[i].GetComponentInChildren<Text>().text = m_arrDice[i].ToString();
+			}
+		}
+
+		SortDicePosition();
 	}
 }
