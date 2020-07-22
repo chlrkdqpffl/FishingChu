@@ -77,6 +77,11 @@ public class GameManager : MonoBehaviour
 		ShowDiceOnActive();
 
 		m_playerData[(int)m_nNowPlayer].CalcDiceValue(m_arrDice);
+
+		if(m_playerData[(int)m_nNowPlayer].KeepCount == 5)
+		{
+
+		}
 	}
 
 	public void OnKeepDice(int index)

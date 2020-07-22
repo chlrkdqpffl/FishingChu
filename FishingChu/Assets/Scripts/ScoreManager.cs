@@ -55,12 +55,15 @@ public class ScoreManager : MonoBehaviour
 	
 	public int CalcRankOfHandsFunc(RankOfHands type, Dictionary<int, int> dicDice)
 	{
+		/*
 		Debug.Log("CalcRankOfHandsFunc\n");
 		foreach(var dic in dicDice)
 		{
 			Debug.Log(dic.Key + " : " + dic.Value);
 		}
 		Debug.Log("======================");
+		*/
+
 		int score = 0;
 		switch(type)
 		{
