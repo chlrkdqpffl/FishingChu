@@ -9,7 +9,8 @@ public class PlayerData : MonoBehaviour
 	{
 		eNone,
 		eRollDice,
-		eKeepSelect,
+		eKeepDice,
+		eDiscardDice,
 		eScoreSelect,
 		eTurnExit,
 	}
@@ -87,7 +88,7 @@ public class PlayerData : MonoBehaviour
 	public void CalcDiceValue(int[] arrDice)
 	{
 //		m_nowAction = ActionType.eRollDice; // 주사위 굴리는 연출 들어갈 시 추가 예정
-		m_nowAction = ActionType.eKeepSelect;
+		m_nowAction = ActionType.eKeepDice;
 
 		var dicTemp = new Dictionary<int, int>();
 		foreach (var value in arrDice)
@@ -158,13 +159,19 @@ public class PlayerData : MonoBehaviour
 		if (GameManager.DiceCount <= m_nKeepDiceCount)
 		{
 			m_nowAction = ActionType.eScoreSelect;
-			ScoreSelectMode();
+//			ScoreSelectMode();
 		}
 	}
 
-	void ScoreSelectMode()
+	public void OnChooseCategory()
 	{
+		ActivateScoreBoard();
+	}
 
+	void ActivateScoreBoard()
+	{
+		// 스코어 보드 살짝 오른쪽으로 이동 연출
+		// 현재 선택된 점수 칸 활성화 연출
 	}
 
 	void UpdateKeepDiceUI(int number)

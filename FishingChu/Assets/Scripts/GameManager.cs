@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
 	public Transform m_tmDiceParent;
 	public Text m_textTurn;
 	public Button[] m_btnDice;
+	public RectTransform m_tmFocusObject;
+	public RectTransform m_tmFocusFingerObject;
 
 	private int m_nNowTurn;
 	private int[] m_arrDice;
@@ -59,6 +61,7 @@ public class GameManager : MonoBehaviour
 		m_tmDiceParent.gameObject.SetActive(false);
 	}
 
+	// 굴리기
 	public void OnRollDice()
 	{
 		// Random Dice
@@ -78,21 +81,58 @@ public class GameManager : MonoBehaviour
 
 		m_playerData[(int)m_nNowPlayer].CalcDiceValue(m_arrDice);
 
-		if(m_playerData[(int)m_nNowPlayer].KeepCount == 5)
+		if (m_playerData[(int)m_nNowPlayer].KeepCount == 5)
 		{
 
 		}
 	}
 
+	// 킵 기능
 	public void OnKeepDice(int index)
 	{
-		if (m_playerData[(int)m_nNowPlayer].PlayerAction != PlayerData.ActionType.eKeepSelect)
+		if (m_playerData[(int)m_nNowPlayer].PlayerAction != PlayerData.ActionType.eKeepDice)
 			return;
 
 		m_playerData[(int)m_nNowPlayer].KeepDice(m_arrDice[index]);
 		m_btnDice[index].gameObject.SetActive(false);
 		SortDicePosition();
 	}
+
+	// 버리기 기능
+	public void OnDiscardDice(int index)
+	{
+
+
+	}
+	
+	public ScoreManager.Categories m_nowSelectCategory = ScoreManager.Categories.eAce;
+	// 임시로 여기에 배치 : 테스트용
+	public void OnScoreSelectUp()
+	{
+		m_nowSelectCategory--;
+
+		if (m_nowSelectCategory <= ScoreManager.Categories.eNone)
+			m_nowSelectCategory = ScoreManager.Categories.eNone + 1;
+
+		m_tmFocusObject.SetParent(m_playerData[(int)m_nNowPlayer].m_textScore[(int)m_nowSelectCategory - 1].transform);
+		m_tmFocusObject.localPosition = Vector3.zero;
+
+		m_tmFocusFingerObject.position = new Vector3(150, m_tmFocusObject.position.y, 0);
+	}
+
+	public void OnScoreSelectDown()
+	{
+		m_nowSelectCategory++;
+
+		if (ScoreManager.Categories.eMax <= m_nowSelectCategory)
+			m_nowSelectCategory = ScoreManager.Categories.eMax - 1;
+
+		m_tmFocusObject.SetParent(m_playerData[(int)m_nNowPlayer].m_textScore[(int)m_nowSelectCategory - 1].transform);
+		m_tmFocusObject.localPosition = Vector3.zero;
+
+		m_tmFocusFingerObject.position = new Vector3(150, m_tmFocusObject.position.y, 0);
+	}
+
 
 	int GetDisplayKeepCount()
 	{
